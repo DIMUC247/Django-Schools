@@ -3,26 +3,14 @@ from django.shortcuts import render, redirect
 from .forms import SubjectForm, StudentForm
 from .models import Subject, Student, Cabinet
 
+
 # Create your views here.
 
 
 def index(request):
-    context = {
-        "products": [
-            {
-                "name": "Хліб",
-                "count" : 100
-            },
-            {
-            "name": "Сіль",
-            "count": 50
-        },
-        {
-            "name": "Молоко",
-            "count": 30
-        },
-    ]}
-    return render(request=request, template_name="index.html", context=context)
+    if request.method == "GET":
+        Welcome_text = "Welcome to My Best Schools!"
+    return render(request=request, template_name="index.html", context=dict(Welcome_text=Welcome_text))
 
 
 def add_subject(request):
