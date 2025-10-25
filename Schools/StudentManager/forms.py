@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
-from .models import MySuperStudent
+from .models import MySuperStudent, SchoolClass
 from django import forms
 
 
@@ -38,3 +38,12 @@ class SignUpForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label="Логін", widget=forms.TextInput(attrs={"class": "form-control"}))
     password = forms.CharField(label="Пароль", widget=forms.PasswordInput(attrs={"class": "form-control"}))
+
+
+class ClassForm(forms.ModelForm):
+    class Meta:
+        model = SchoolClass
+        fields = ["name"]
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "form-control"})
+        }

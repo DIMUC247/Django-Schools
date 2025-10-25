@@ -3,9 +3,12 @@
     <a class="navbar-brand" href="{% url 'index' %}">StudentManager</a>
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <button class="btn btn-link nav-item"><a class="nav-link" href="{% url 'signup' %}"></a><button type="button" class="btn btn-primary">Signup
-        <button class="btn btn-link nav-item"><a class="nav-link" href="{% url 'signin' %}"></a><button type="button" class="btn btn-success">Signin
-        <button class="btn btn-link nav-item"><a class="nav-link" href="{% url 'signout' %}"></a><button type="button" class="btn btn-danger">Signout
+        <li class="nav-item"><a class="btn btn-primary" href="{% url 'signup' %}">Signup</a></li>
+        <li class="nav-item"><a class="btn btn-success" href="{% url 'signin' %}">Signin</a></li>
+        <li class="nav-item"><a class="btn btn-info" href="{% url 'get_students' %}">Students</a></li>
+        <li class="nav-item"><a class="btn btn-warning" href="{% url 'add_class' %}">Add Class</a></li>
+        <li class="nav-item"><a class="btn btn-secondary" href="{% url 'get_classes' %}">Classes</a></li>
+        <li class="nav-item"><a class="btn btn-danger" href="{% url 'signout' %}">Signout</a></li>
       </ul>
     </div>
   </div>

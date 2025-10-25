@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Додати студента до класу: {{ school_class.name }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <select name="first_name">
+            {% for student in students %}
+                <option value="{{ student.first_name }}">{{ student.first_name }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Додати студента" class="btn btn-primary">
+    </form>
+{% endblock %}
