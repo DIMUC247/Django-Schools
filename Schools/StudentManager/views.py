@@ -7,8 +7,8 @@ from django.http import HttpRequest, HttpResponseForbidden
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .forms import SignUpForm, LoginForm, ClassForm
 from . import forms
-from .models import MySuperStudent, SchoolClass
-# from Schools.StudentManager import forms
+from .models import SchoolClass, MySuperStudent
+
 
 
 # Create your views here.
@@ -82,7 +82,11 @@ def add_class(request):
 @login_required
 def get_classes(request):
     classes = SchoolClass.objects.all().order_by("name")
-    return render(request, "classes.html", {"classes": classes})
+    classes_with_students = [
+        (cls, MySuperStudent.objects.filter(class_name=cls.name))
+        for cls in classes
+    ]
+    return render(request, "classes.html", {"classes_with_students": classes_with_students})
 
 
 @login_required
@@ -103,3 +107,20 @@ def add_student_to_class(request, class_id):
         messages.success(request, f"Студент {student.username} доданий до класу {cls.name}.")
         return redirect("get_classes")
     return render(request, "add_student_to_class.html", {"class": cls})
+
+
+@login_required
+def remove_student_from_class(request, class_id, student_id):
+    cls = get_object_or_404(SchoolClass, pk=class_id)
+    student = get_object_or_404(MySuperStudent, pk=student_id)
+
+    if request.method == "POST":
+        if student.class_name != cls.name:
+            messages.error(request, f"Студент {student.username} не належить до класу {cls.name}.")
+            return redirect("get_classes")
+        student.class_name = ""
+        student.save()
+        messages.success(request, f"Студент {student.username} видалений з класу {cls.name}.")
+        return redirect("get_classes")
+
+    return render(request, "remove_student_from_class.html", {"class": cls, "student": student})

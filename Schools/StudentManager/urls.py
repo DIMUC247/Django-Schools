@@ -27,4 +27,5 @@ urlpatterns = [
     path("get_classes/", views.get_classes, name="get_classes"),
     path("add_class/", views.add_class, name="add_class"),
     path("add_student_to_class/<int:class_id>/", views.add_student_to_class, name="add_student_to_class"),
+    path("remove_student_from_class/<int:class_id>/<int:student_id>/", views.remove_student_from_class, name="remove_student_from_class"),
 ]

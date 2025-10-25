@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<table class="table table-dark">
+<table class="table table-dark table-striped mt-4">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -10,17 +10,24 @@
     </tr>
   </thead>
   <tbody>
-    {% for c in classes %}
+    {% for cls, students in classes_with_students %}
     <tr {% if forloop.first %}class="table-active"{% endif %}>
       <th scope="row">{{ forloop.counter }}</th>
-      <td>{{ c.name }}</td>
+      <td>{{ cls.name }}</td>
+      <td>{{ students|length }}</td>
       <td>
-        <a class="btn btn-sm btn-primary" href="{% url 'add_student_to_class' c.id %}">Add student</a>
+        <a class="btn btn-success" href="{% url 'add_student_to_class' cls.id %}">Додати студента</a>
+        {% for student in students %}
+          <a class="btn btn-danger btn-sm mt-1"
+             href="{% url 'remove_student_from_class' cls.id student.id %}">
+            Видалити {{ student.username }}
+          </a>
+        {% endfor %}
       </td>
     </tr>
     {% empty %}
     <tr>
-      <td colspan="3">Класів поки немає.</td>
+      <td colspan="4">Класів поки немає.</td>
     </tr>
     {% endfor %}
   </tbody>
