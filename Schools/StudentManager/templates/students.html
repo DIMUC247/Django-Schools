@@ -4,10 +4,12 @@
 <table></table>
     <thead>
         <tr>
+            <th></th>
             <th>ID</th>
             <th>Ім'я</th>
             <th>Прізвище</th>
             <th>Вік</th>
+            <th>Клас</th>
         </tr>
     </thead>
     <tbody>
@@ -17,6 +19,7 @@
             <td>{{ student.first_name }}</td>
             <td>{{ student.last_name }}</td>
             <td>{{ student.age }}</td>
+            <td>{{ student.class_name }}</td>
         </tr>
         {% endfor %}
     </tbody>

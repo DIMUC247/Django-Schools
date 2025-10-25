@@ -4,7 +4,7 @@ from .models import MySuperStudent
 from django import forms
 
 
-class  SignUpForm(UserCreationForm):
+class SignUpForm(UserCreationForm):
     username = forms.CharField(
         max_length=50,
         widget=forms.TextInput(attrs={"class": "form-control"}),
@@ -17,10 +17,23 @@ class  SignUpForm(UserCreationForm):
     address = forms.CharField(required=False,max_length=250, widget=forms.TextInput(attrs={"class": "form-control"}), label="Адреса")
     password1 = forms.CharField(max_length=50, widget=forms.PasswordInput(attrs={"class": "form-control"}), label="Пароль")
     password2 = forms.CharField(max_length=50, widget=forms.PasswordInput(attrs={"class": "form-control"}), label="Підтвердження пароля")
+    age = forms.IntegerField(required=False)
+    class_name = forms.CharField(max_length=50, required=False)
 
     class Meta:
         model = MySuperStudent
-        fields = ("username", "first_name", "last_name", "phone_number", "address", "password1", "password2",)
+        fields = ("username", "first_name", "last_name", "phone_number", "address", "password1", "password2", "age", "class_name",)
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.first_name = self.cleaned_data.get("first_name", "")
+        user.last_name = self.cleaned_data.get("last_name", "")
+        user.age = self.cleaned_data.get("age")
+        user.class_name = self.cleaned_data.get("class_name", "")
+        if commit:
+            user.save()
+        return user
+
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label="Логін", widget=forms.TextInput(attrs={"class": "form-control"}))

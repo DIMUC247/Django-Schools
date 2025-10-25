@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>First Name: {{request.student.first_name}}</h2>
-<h2>Last Name: {{request.student.last_name}}</h2>
-<h2>Phone Number: {{request.student.phone_number}}</h2>
-<h2>Address: {{request.student.address}}</h2>
+  {% if student %}
+    <h2>Ім'я: {{ student.first_name }}</h2>
+    <h2>Прізвище: {{ student.last_name }}</h2>
+    <h2>Вік: {{ student.age }}</h2>
+    <h2>Клас: {{ student.class_name }}</h2>
+  {% else %}
+    <p>Дані відсутні. Будь ласка, <a href="{% url 'signin' %}">увійдіть</a> або <a href="{% url 'signup' %}">зареєструйтесь</a>.</p>
+  {% endif %}
 {% endblock %}
