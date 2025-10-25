@@ -1,6 +1,6 @@
-from django.shortcuts import render,redirect
-from django.contrib.auth import login,logout,authenticate
-from django.contrib.auth.decorators import login_required,permission_required
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpRequest, HttpResponseForbidden
 
@@ -87,23 +87,19 @@ def get_classes(request):
 
 @login_required
 def add_student_to_class(request, class_id):
-    try:
-        school_class = SchoolClass.objects.get(id=class_id)
-    except SchoolClass.DoesNotExist:
-        return HttpResponseForbidden("Клас не знайдено.")
-
+    cls = get_object_or_404(SchoolClass, pk=class_id)
     if request.method == "POST":
-        first_name = request.POST.get("first_name")
-        try:
-            student = MySuperStudent.objects.get(name=first_name)
-            student.class_name = school_class.name
-            student.save()
-            messages.success(request, f"Студента '{student}' додано до класу '{school_class.name}'.")
+        username = request.POST.get("username", "").strip()
+        if not username:
+            messages.error(request, "Введіть username студента.")
             return redirect("get_classes")
+        try:
+            student = MySuperStudent.objects.get(username=username)
         except MySuperStudent.DoesNotExist:
-            messages.error(request, "Студента не знайдено.")
-
-    students = MySuperStudent.objects.filter(class_name__isnull=True)
-    return render(request, "add_student_to_class.html", {"school_class": school_class, "students": students})
-
-
+            messages.error(request, f"Користувача з username '{username}' не знайдено.")
+            return redirect("get_classes")
+        student.class_name = cls.name
+        student.save()
+        messages.success(request, f"Студент {student.username} доданий до класу {cls.name}.")
+        return redirect("get_classes")
+    return render(request, "add_student_to_class.html", {"class": cls})
