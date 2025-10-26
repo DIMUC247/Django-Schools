@@ -8,8 +8,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .forms import SignUpForm, LoginForm, ClassForm
 from . import forms
 from .models import SchoolClass, MySuperStudent
-
-
+from django.core.paginator import Paginator
 
 # Create your views here.
 def index(request):
@@ -59,11 +58,18 @@ def signout(request):
 
 @login_required
 def get_students(request: HttpRequest):
-    return render(
-        request=request,
-        template_name="students.html",
-        context=dict(students=MySuperStudent.objects.all())
-    )
+    students_qs = MySuperStudent.objects.all().order_by("last_name", "first_name")
+    paginator = Paginator(students_qs, 3)
+    page = request.GET.get("page", 1)
+    try:
+        page_number = int(page)
+        if page_number < 1:
+            page_number = 1
+    except (TypeError, ValueError):
+        page_number = 1
+
+    page_obj = paginator.get_page(page_number)
+    return render(request, "students.html", {"page_obj": page_obj})
 
 
 @login_required

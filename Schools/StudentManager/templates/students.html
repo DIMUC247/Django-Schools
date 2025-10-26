@@ -12,19 +12,36 @@
     </tr>
   </thead>
   <tbody>
-    {% for student in students %}
+    {% for student in page_obj.object_list %}
     <tr>
-      <th scope="row">{{ forloop.counter }}</th>
+      <th scope="row">{{ page_obj.start_index|add:forloop.counter0 }}</th>
       <td>{{ student.first_name }}</td>
       <td>{{ student.last_name }}</td>
       <td>{{ student.age }}</td>
       <td>{{ student.class_name }}</td>
     </tr>
     {% empty %}
-    <tr>
-      <td colspan="5">No students found.</td>
-    </tr>
+      <tr>
+        <td colspan="5">No students found.</td>
+      </tr>
     {% endfor %}
-  </tbody>
-</table>
-{% endblock %}
+    </tbody>
+  </table>
+    <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-outline-primary">&laquo; Перша</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary">Попередня</a>
+        {% endif %}
+
+        <span class="current">
+            Сторінка {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-primary">Наступна</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline-primary">Остання &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock content %}
